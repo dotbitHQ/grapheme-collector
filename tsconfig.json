@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES6",
+    "useDefineForClassFields": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "skipLibCheck": true,
+    "composite": true,
+    "paths": {
+      "~/*": ["src/*"],
+      "lib/*": ["lib/dist/*"]
+    }
+  }
+}
