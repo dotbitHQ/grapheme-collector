@@ -1,10 +1,7 @@
-import axios from 'axios'
-import * as cheerio from 'cheerio'
 import GraphemeSplitter from 'grapheme-splitter'
 import * as fs from 'fs/promises'
 
 const filename = 'vietnamese.txt'
-const url = 'https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Vietnamese_syllables'
 const upperCaseAndDigit = '0123456789AÁĂÂẢẤBCDĐEÊỂỀFGHIÍJKLMNOÔƠỞÒPQRSTUƯVWXYÝZ'
 const symbols = '[]{}()<>,.=+-*/%&|^~!@#$%^`?_:;\'\"'
 
@@ -24,19 +21,21 @@ const symbols = '[]{}()<>,.=+-*/%&|^~!@#$%^`?_:;\'\"'
 
     let newLettersCount = 0
 
-    console.log('Load page:', url)
-    const resq = await axios.get(url)
-    const $ = cheerio.load(resq.data)
+    let wordList: string[] = []
+    const wordListFile = 'vietnamese-wordlist/Viet74K.txt'
+    try {
+        const data = await fs.readFile(wordListFile, 'utf-8')
+        wordList = data.split('\n')
+    } catch (_) {
+        console.error("Can't load character set file, initialize with empty data.")
+        process.exit(1)
+    }
 
     const splitter = new GraphemeSplitter()
 
-    console.log('Start parsing page ...')
-    $('div.mw-parser-output li a').each((i, el) => {
-        const word = $(el).text().trim()
-        console.log('Found word:', word)
-
+    console.log('Start parsing word list ...')
+    wordList.forEach((word, i) => {
         const letters = splitter.splitGraphemes(word)
-        console.log('Split to letters:', letters)
 
         for (let letter of letters) {
             if (letter.trim().length <= 0 || upperCaseAndDigit.includes(letter) || symbols.includes(letter)) {

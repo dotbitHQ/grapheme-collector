@@ -9,7 +9,7 @@ const filename = 'thai.txt'
     console.log('Load character set file:', filename)
     let data: string
     try {
-        data = await fs.readFile(filename, 'utf-8')
+        data = await fs.readFile(`output/${filename}`, 'utf-8')
     } catch (_) {
         console.error("Can't load character set file, initialize with empty data.")
         data = ''
@@ -65,7 +65,7 @@ const filename = 'thai.txt'
         })
 
         console.log('New letters found:', newLettersCount)
-        await fs.writeFile(`outputs/${filename}`, existLetters.join('\n'), 'utf8')
+        await fs.writeFile(`output/${filename}`, existLetters.join('\n'), 'utf8')
 
         await sleep(20 * 1000)
     }

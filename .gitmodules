@@ -1,0 +1,3 @@
+[submodule "vietnamese-wordlist"]
+	path = vietnamese-wordlist
+	url = https://github.com/duyet/vietnamese-wordlist.git

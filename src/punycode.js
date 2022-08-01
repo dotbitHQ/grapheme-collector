@@ -4,11 +4,11 @@ const { exit } = require('process')
 const fs = require('fs/promises')
 const path = require('path')
 
-const filename = 'vietnamese.txt'
+const filename = 'output/vietnamese.txt'
 
 function rename(oldName, newSuffix) {
   const ext = path.extname(oldName)
-  const newName = path.basename(oldName, ext) + newSuffix + ext
+  const newName = 'output/' + path.basename(oldName, ext) + newSuffix + ext
   return newName
 }
 
