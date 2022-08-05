@@ -4,6 +4,16 @@ import GraphemeSplitter from 'grapheme-splitter'
 import * as fs from 'fs/promises'
 
 const filename = 'thai.txt'
+const thaiSymbols = ['ฯ', 'ฯลฯ', 'ๆ', '๏', '๚', '๛', '┼', '฿']
+const thaiCodePoints = /^[\u0E00-\u0E7F]*$/gu
+
+const pages = [
+    { selector: 'table tr > td:nth-child(2)', url: 'http://www.sealang.net/thai/vocabulary/search.pl?list=Thai+AWL+secondary&query=&level=&relation=orHarder' },
+    { selector: 'table tr > td:nth-child(2)', url: 'http://www.sealang.net/thai/vocabulary/search.pl?list=Thai+AWL+main&query=&level=&relation=orHarder' },
+    { selector: 'table tr > td:nth-child(2)', url: 'http://www.sealang.net/thai/vocabulary/search.pl?list=AUA+Chapter+{{page}}&query=&level=&relation=orHarder' },
+    { selector: 'table.wikitable tr > td:nth-child(2)', url: 'https://en.wikipedia.org/wiki/List_of_municipalities_in_Thailand'},
+    { selector: 'table.has-background tr > td:nth-child(1)', url: 'https://ling-app.com/th/names-in-thai/'},
+]
 
 ;(async () => {
     console.log('Load character set file:', filename)
@@ -22,10 +32,9 @@ const filename = 'thai.txt'
     let newLettersCount = 0
     // The i should be adjust manually to cope with occasional failsures of requests.
     for (let i = 1; i <= 1; i++) {
-        const page = i.toString().padStart(2, '0')
-        const url = `http://www.sealang.net/thai/vocabulary/search.pl?list=Thai+AWL+secondary&query=&level=&relation=orHarder`
-        // const url = `http://www.sealang.net/thai/vocabulary/search.pl?list=Thai+AWL+main&query=&level=&relation=orHarder`
-        // const url = `http://www.sealang.net/thai/vocabulary/search.pl?list=AUA+Chapter+${page}&query=&level=&relation=orHarder`
+        // const page = i.toString().padStart(2, '0')
+        // const url = pages[0].url.replace('{{page}}', page)
+        const url = pages[4].url
 
         console.log(`Load page ${i}: ${url}`)
         let $: cheerio.CheerioAPI
@@ -40,7 +49,7 @@ const filename = 'thai.txt'
         const splitter = new GraphemeSplitter()
 
         console.log('Start parsing page ...')
-        $('table tr > td:nth-child(2)').each((i, el) => {
+        $(pages[4].selector).each((i, el) => {
             if (i === 0) {
                 return
             }
@@ -52,7 +61,7 @@ const filename = 'thai.txt'
             console.log('Split to letters:', letters)
 
             for (let letter of letters) {
-                if (letter.trim().length <= 0) {
+                if (letter.trim().length <= 0 || thaiSymbols.includes(letter) || !thaiCodePoints.test(letter)) {
                     continue
                 }
 

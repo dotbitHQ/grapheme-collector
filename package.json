@@ -2,6 +2,7 @@
   "scripts": {
     "korean": "ts-node src/korean.ts",
     "thai": "ts-node src/thai.ts",
+    "thai-local": "ts-node src/thai-local.ts",
     "vi": "ts-node src/vietnamese.ts && ts-node src/vietnamese-local.ts",
     "punycode": "node src/punycode.js"
   },
